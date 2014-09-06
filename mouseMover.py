@@ -3,7 +3,6 @@
 #"Daemon" to move mouse slowly, stopping 
 #unwanted power save effects
 from pymouse import PyMouse
-from pykeyboard import PyKeyboard
 import time
 mo=PyMouse()
 

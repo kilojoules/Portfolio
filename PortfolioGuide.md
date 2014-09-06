@@ -1,7 +1,6 @@
 Portfolio
 =========
-
-A Portfolio of Some of My Work
+This is a portfolio of Some of My Work
 
 MouseMover
 ---------------

@@ -62,4 +62,5 @@ score=0
 score+=reqinf('ch.6 problem 7',rubric)
 score+=reqinf('ch.7 problem 9',rubric)
 
+# Final score is average score
 print >>rubric,'Total Score is ',score/2

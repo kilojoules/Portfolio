@@ -1,4 +1,8 @@
+#!/usr/bin/env sh
 # Julian Quick
+# Context: Used as a tool for graders to quickly create a directory for each student 
+# lab report with the grading rubric and unzipped submission moved inside
+
 # Description: sorts student submissions by creating individual student lab directories 
 # conainin the submission and grading rubric
 
@@ -6,7 +10,7 @@
 #    The grading rubric spreadsheet as rubric
 #    A directory called "Submissions" containing lab submissions
 
-# replace spaces in filenames within Submissions with _
+# replace spaces in submission filenames  with _
 detox -r Submissions
 
 # iterate through files in submissions

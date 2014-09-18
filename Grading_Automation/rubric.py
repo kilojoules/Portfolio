@@ -50,6 +50,7 @@ def reqinf(num,output):
   print >>output,''
   print >>output,''
 
+  # Return assignment's totla score out of 100
   return score
 
 # ======================================================

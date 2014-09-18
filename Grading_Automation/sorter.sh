@@ -26,5 +26,7 @@ do
     # as well as grading rubric
     cp Submissions/"$f" "./$dir"
     cp grader.py "$dir"
+
+    # Unzip submission
     tar -C $dir -zxvf $dir/$f
 done

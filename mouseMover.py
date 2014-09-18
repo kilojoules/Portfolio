@@ -6,7 +6,6 @@ from pymouse import PyMouse
 import time
 mo=PyMouse()
 
-
 while True:
   # Every 300 seconds move the mouse 
   # one pixel down and to the right

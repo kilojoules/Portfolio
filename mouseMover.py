@@ -9,5 +9,5 @@ mo=PyMouse()
 while True:
   # Every 300 seconds move the mouse 
   # one pixel down and to the right
-  time.sleep(300)
+  time.sleep(100)
   mo.move(mo.position()[0]+1,mo.position()[1]+1)

@@ -1,3 +1,3 @@
-rubric.py requests info for Engr325 Fortran Programming Rubric and writes feedback file
+rubric.py requests feedback using Engr325 Fortran Programm Rubric then outputs feedback file
 
 sorter.sh sorts student submissions by creating individual student lab directories conainining the unzipped submission and grading rubric

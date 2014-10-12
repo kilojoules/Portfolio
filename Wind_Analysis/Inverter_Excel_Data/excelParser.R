@@ -11,7 +11,6 @@
 
 require(XLConnect)
 require(plyr)
-require('chemCal')
 
 # Read Excel data
 wb <- loadWorkbook("~/Code/RPS/BearRiverBand-Rancheria-WindTurbine-Log-2009-2014.xlsx")

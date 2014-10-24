@@ -1,20 +1,6 @@
 require(XLConnect)
 require(plyr)
 
-# Creat Wind power curve
-# ======================
-# 
-# Second degree polynomial fit of first 
-# 7 terms of wind power curve
-pow <- data.frame('speed'=seq(0.5,3.5,0.5))
-pow$wpower <- c(-12,-12,-11,0,39,102,229)
-pow.fit <- lm(wpower ~ poly(speed,degree = 2),dat=pow)
-
-# Create power from curve for wind speeds 0.9
-# to 20.5 at delta of 0.01
-powwa <- data.frame('speed'=seq(0.9,20.5,0.01))
-powwa$power <- predict.lm(pow.fit,newdata=powwa)
-
 #==================
 # Read Excel data
 
@@ -33,9 +19,9 @@ for (l in 1:(length(lst)-4))
 }
 
 # Parse timestamp
-Inverter.dat$TIME <- strptime(dat$TIME, format='%Y-%m-%d')
-Inverter.dat$month <- as.numeric(format(dat$TIME,'%m'))
-Inverter.dat$day <- as.numeric(format(dat$TIME,'%j'))
+Inverter.dat$TIME <- strptime(Inverter.dat$TIME, format='%Y-%m-%d')
+Inverter.dat$month <- as.numeric(format(Inverter.dat$TIME,'%m'))
+Inverter.dat$day <- as.numeric(format(Inverter.dat$TIME,'%j'))
 
 # Save energy data as numbers
 Inverter.dat$DATA <- as.numeric(Inverter.dat$DATA)
@@ -52,7 +38,8 @@ for (i in 2:length(Inverter.dat$TIME))
     {  
       if(Inverter.dat$DATA[i]>Inverter.dat$DATA[i-1])
       {
-        Inverter.dat$KW.day[i] <- as.numeric((Inverter.dat$DATA[i]-Inverter.dat$DATA[i-1])/as.numeric(Inverter.dat$TIME[i]-Inverter.dat$TIME[i-1]))*1000/24
+        # Assume inverter effeciency is 0.927
+        Inverter.dat$KW.day[i] <- (1/0.927)*as.numeric((Inverter.dat$DATA[i]-Inverter.dat$DATA[i-1])/as.numeric(Inverter.dat$TIME[i]-Inverter.dat$TIME[i-1]))*1000/24
       }
       else Inverter.dat$KW.day[i] <- NA
     }
@@ -86,12 +73,37 @@ for (i in 1:length(Inverter.dat$KW.day))
     Inverter.dat$wind <- 20.5
   }
 }
-# plot(density(dat$wind))
+
+# extrapolate to new height
+newHeight=150
+Inverter.dat$extrapolated <- Inverter.dat$wind * (newHeight/100)^(1/7)
+
+# find monthly averages
 avg.months=data.frame('month'=c(1:12))
 for (i in 1:12){
-  m <- subset(dat,month==i)
+  m <- subset(Inverter.dat,month==i)
   avg.months$wind.measured[i]<-mean(m$wind)
   avg.months$wind.ext[i]<-mean(m$extrapolated)
 }
+
+
+avg.invmonths=data.frame('month'=c(1:12))
+for (i in 1:12)
+{
+  # make subset
+  m <- subset(Inverter.dat,month==i)
   
+  # record average measured and extrapolated speeds
+  avg.invmonths$wind.measured[i]<-mean(m$wind)
+  avg.invmonths$wind.ext[i] <- mean(m$extrapolated)
   
+  # Find monthly extrapolated power
+  x <- density(m$extrapolated)$x
+  drey <- density(drayleigh(x,scale = mean(m$extrapolated)))
+  pow <- drey$y*(drey$x[4]-drey$x[3])*wpc(x)
+  avg.invmonths$power.ext[i] <- sum(pow)
+  avg.invmonths$low[i] <- sum(pow) * 0.99
+  avg.invmonths$high[i] <- sum(pow) * 1.01
+}
+
+

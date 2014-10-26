@@ -8,13 +8,15 @@ import matplotlib.pyplot as plt
 import sys
 
 # load csv as data frame
-df=pandas.DataFrame.from_csv(str(sys.argv[1]))
+df=pandas.io.parsers.read_csv(str(sys.argv[1]))
 
 # We only want the first 6 collumns
-df = df.ix[:,1:7]
+df = df.ix[:,0:6]
 
 # set up plot
-plt.figure(); df.plot(); plt.legend(loc='best')
+plt.figure() 
+df.plot()
+plt.legend(loc='best')
 plt.legend(loc=5,prop={'size':6})
 
 # display plot

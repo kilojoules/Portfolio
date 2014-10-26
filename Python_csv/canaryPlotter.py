@@ -18,6 +18,8 @@ plt.figure()
 df.plot(alpha=0.3)
 plt.legend(loc='best')
 plt.legend(loc=5,prop={'size':6})
+plt.ylabel('Current')
+plt.xlabel('Reading #')
 
 # display plot
 plt.show()

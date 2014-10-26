@@ -15,7 +15,7 @@ df = df.ix[:,0:6]
 
 # set up plot
 plt.figure() 
-df.plot()
+df.plot(alpha=0.3)
 plt.legend(loc='best')
 plt.legend(loc=5,prop={'size':6})
 

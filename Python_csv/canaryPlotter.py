@@ -5,9 +5,10 @@
 
 from pandas import *
 import matplotlib.pyplot as plt
+import sys
 
 # load csv as data frame
-df=pandas.DataFrame.from_csv('/Users/julian/Desktop/dat.dat')
+df=pandas.DataFrame.from_csv(str(sys.argv[1]))
 
 # We only want the first 6 collumns
 df = df.ix[:,1:7]

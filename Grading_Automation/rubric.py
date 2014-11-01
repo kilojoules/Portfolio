@@ -2,11 +2,14 @@
 # Julian Quick
 # This program is used to help me grade E325 assignments
 
-def handProb(name):
-   print "how was problem "+name+"?"
-   ans = raw_input("how was problem "+name+"? __ / 100")
+def handProb(name,outfile):
+   ans = int(raw_input("how was problem "+name+"? __ / 100      "))
    print >>outfile, name+':'
-   print >>otfile, "   Score: "+str(ans)+'/100'
+   print >>outfile, "   Score: "+str(ans)+'/100'
+   coms=str(raw_input("comments?"))
+   if coms=="": coms="Nice Job"
+   if coms=='m':coms='Missing'
+   print >>outfile, "   ("+coms+")"
    return(ans)
 
 # req_info asks user for grade, prints result to output grading file, and 
@@ -14,6 +17,10 @@ def handProb(name):
 def req_info(half1,half2,outfile):
    ans=raw_input(str(half1)+str(half2))
    print >>outfile,half1+str(ans)+half2
+   coms=str(raw_input("comments?"))
+   if coms=="": coms="Nice Job"
+   if coms=='m':coms='Missing'
+   print >>outfile, "   ("+coms+")"
    return int(ans)
 
 # reqinf uses req)info to request info based on Engr325 Fortran Programming Rubric
@@ -40,5 +47,8 @@ def reqinf(num,output):
 
 rubric=open('rubric.txt','w')
 score=0
-score+=reqinf('Geometric Mean',rubric)
+score+=handProb('5.1',rubric)
+score+=handProb('5.18',rubric)
+score+=reqinf('5.24',rubric)
+score=score/3
 print >>rubric,'Total Score is ',score

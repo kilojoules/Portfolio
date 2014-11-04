@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # Julian Quick
-# October 25 2014
 # plots first column of csv file as x axis, next 5 columns as y axis
 
 from pandas import *

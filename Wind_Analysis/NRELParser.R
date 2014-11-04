@@ -1,3 +1,4 @@
+require(VGAM)
 NREL.dat=data.frame()
 
 # for every file in directory "/Users/julian/Code/RPS/NREL NREL.data/" with RV in the name
@@ -22,42 +23,11 @@ for (file in list.files('/Users/julian/Code/RPS/NREL data',pattern = 'RV',full.n
 NREL.dat$time <- strptime(NREL.dat$time, format='%m/%d/%Y %H:%M')
 NREL.dat$month <- as.numeric(format(NREL.dat$time,format = '%m'))
 NREL.dat$hour <- as.numeric(format(NREL.dat$time,format='%H'))
+NREL.dat$minute <- as.numeric(format(NREL.dat$time,format='%M'))
 
-# map 
+# map. We don't know what the height is.
 NREL.dat$avg.speed.150m=NREL.dat$avg.speed*(100/60)^(1/7)
 
-# powerCurve is structure such that index = speed*2+2
-powerCurve <-list()
-for (speed in seq(0.5,20.5,0.5))
-{
-  count <- as.numeric(speed*2)
-  
-  # this is the NREL.data from the turbine company
-  powerCurve[count] <-c(0,0,0,0,39,102,229,399,596,848,1151,1510,1938,2403,2949,3602,4306,5071,5960,6856,7849,8863,9928,10885,11619,12019,12276,12395,12449,12495,12508,12546,12555,12503,12528,12442,12396,12208,11878,11989,11495)[count]
-}
-
-# map through wind power curve
-for (i in seq(1,length(NREL.dat$avg.speed.150m)))
-{
-  if(NREL.dat$avg.speed.150m[i]>20)
-  {
-    NREL.dat$power[i] <- 11495
-  }
-  else 
-  {
-    if(NREL.dat$avg.speed.150m[i]<2)
-    {
-      NREL.dat$power[i] <- 0
-    }
-    else
-    {
-      NREL.dat$power[i] <- powerCurve[[round(NREL.dat$avg.speed.150m[i]*2-2)]]
-    }
-  }
-}
-
-plot(ecdf(NREL.dat$power))
-hist(density(NREL.dat$avg.speed))
 
 # Compare rayleigh to actual NREL NREL.data
 require('VGAM')
@@ -68,22 +38,19 @@ for (i in 1:12)
   vars$vars[i]<-var(drayleigh(density(feb$avg.speed)$x,scale=mean(feb$avg.speed)),density(feb$avg.speed)$y)
 }
 
+# time of use sceme: mean(set)-mean(subet) = K sd(set)
 avg.months=data.frame('month'=c(1:12))
 for (i in 1:12)
 {
   # make subset
   m <- subset(NREL.dat,month==i)
+  if(length(m$time)>0)
+  {
+    # record average measured and extrapolated speeds
+    avg.months$wind.measured[i]<-mean(m$avg.speed)
+    avg.months$wind.ext[i]<-mean(m$avg.speed.150m)
   
-  # record average measured and extrapolated speeds
-  avg.months$wind.measured[i]<-mean(m$avg.speed)
-  avg.months$wind.ext[i]<-mean(m$avg.speed.150m)
-  
-  # Find monthly extrapolated power)
-  avg.months$power.ext <- wpc(avg.months$wind.ext)
+    # Find monthly extrapolated power)
+   avg.months$power.ext[i] <- wpc(avg.months$wind.ext[i])
+  }
 }
-
-
-
-
-
-

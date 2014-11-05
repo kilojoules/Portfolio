@@ -86,7 +86,7 @@ for (i in 1:12){
   avg.months$wind.ext[i]<-mean(m$extrapolated)
 }
 
-
+# Forecast power production
 avg.invmonths=data.frame('month'=c(1:12))
 for (i in 1:12)
 {

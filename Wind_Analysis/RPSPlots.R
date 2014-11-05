@@ -28,6 +28,9 @@ plot(density(Inverter.dat$wind),
      main='Wind Speed Density at 100 Feet'
      )
 # ----------------------------------------------------
+# Compare Reghleigh fit to empirical wind 
+# speed distribution in April,which is 
+# a month with a representative wind speed
 April <- subset(Inverter.dat,month==4)
 plot(density(April$extrapolated),lwd=5,
      xlab='Wind Speed [m/s]',

@@ -46,12 +46,6 @@ legend(11,.2, # places a legend at the appropriate place
         cex=0.7 # Make the legend the right size
         )
 # ----------------------------------------------------
-qplot(comps$power.fork.sub,
-     xlab='Time Period',
-     x = comps$time,
-     ylab='Forecasted Average Power [W]',
-     )
-# ----------------------------------------------------
 # Compare NREL empirical density to
 # Rayleigh distribution fit
 x <- density(NREL.dat$avg.speed)$x

@@ -12,7 +12,7 @@ for subdir, dirs, files in os.walk('Your_Folder'):
 
     # make directories for plots
     for file in dirs:
-        if len(subdir.split('/'))>=4:
+        if len(subdir.split('/'))==4:
             try:os.mkdir(subdir+'/'+plotfold)
             except OSError:pass
 

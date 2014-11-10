@@ -8,18 +8,19 @@ import os
 # in the form /<name>/
 plotfold='plots'
 
-for subdir, dirs, files in os.walk('Your_Folder'):
+for subdir, dirs, files in os.walk('35ca7'):
 
     # make directories for plots
     for file in dirs:
-        if len(subdir.split('/'))==4:
+        if len(subdir.split('/'))==3:
             try:os.mkdir(subdir+'/'+plotfold)
             except OSError:pass
 
     # plot each file
     for file in files:
 
-        if str(file)[-4:]=='.csv' and len(subdir.split('/'))==4:
+        print 'plotting from ',subdir,str(file)
+        if str(file)[-4:]=='.csv' and len(subdir.split('/'))==3:
 
             # load csv as data frame
             df=pandas.io.parsers.read_csv(subdir+'/'+file)

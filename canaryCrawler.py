@@ -8,6 +8,9 @@ import os
 # in the form /<name>/
 plotfold='plots'
 
+# How many columns should I plot?
+numcol=6
+
 for subdir, dirs, files in os.walk('35ca7'):
 
     # make directories for plots
@@ -25,19 +28,17 @@ for subdir, dirs, files in os.walk('35ca7'):
             # load csv as data frame
             df=pandas.io.parsers.read_csv(subdir+'/'+file)
 
-            # How many columns should I plot?
-            numcol=6
-
             # We only want the first 6 collumns
             df = df.ix[:,0:numcol]
 
             # set up plot
             plt.figure() 
-            df.plot(alpha=0.3) # add transparency to see overlapping colors
+            df.plot(df.Timestamp,alpha=0.3) # add transparency to see overlapping colors
             plt.legend(loc='best') # add legend in non-intrusive location
             plt.legend(loc=5,prop={'size':numcol}) # 
             plt.ylabel('Current')
             plt.xlabel('Reading #')
+            plt.gcf().autofmt_xdate()
 
             # display plot
             spsubs = str(subdir).split('/')

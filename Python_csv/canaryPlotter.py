@@ -4,6 +4,7 @@
 
 from pandas import *
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import sys
 
 # This program needs a csv file to plot
@@ -14,7 +15,7 @@ if len(sys.argv)!=2:
   quit()
 
 # load csv as data frame
-df=pandas.io.parsers.read_csv(str(sys.argv[1]))
+df=pandas.io.parsers.read_csv(str(sys.argv[1]),parse_dates=True)#,keep_date_col=True)
 
 # How many columns should I plot?
 numcol=6
@@ -24,11 +25,18 @@ df = df.ix[:,0:numcol]
 
 # set up plot
 plt.figure() 
-df.plot(alpha=0.3) # add transparency to see overlapping colors
+# matplotlib.dates.AutoDateLocator()
+df.plot(df.Timestamp,alpha=0.3) # add transparency to see overlapping colors
+plt.plot()
 plt.legend(loc='best') # add legend in non-intrusive location
+plt.tight_layout(pad=1.08)
 plt.legend(loc=5,prop={'size':numcol}) # 
 plt.ylabel('Current')
-plt.xlabel('Reading #')
+plt.xlabel('Date')
+
+plt.gcf().autofmt_xdate()
+
+
 
 # display plot
 plt.show()

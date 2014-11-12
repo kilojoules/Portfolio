@@ -5,6 +5,7 @@
 from pandas import *
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import time
 import sys
 
 # This program needs a csv file to plot
@@ -36,7 +37,13 @@ plt.xlabel('Date')
 
 plt.gcf().autofmt_xdate()
 
+plt.gca().set_ylim([0,1200])
+stamp = time.strptime(df.Timestamp[1],'%a %b %d %H:%M:%S %Y')
+day = time.strftime('%a',stamp)
+month =  time.strftime('%b',stamp)
+year =  time.strftime('%Y',stamp)
 
+plt.title(day+' '+month+' '+year)
 
 # display plot
 plt.show()

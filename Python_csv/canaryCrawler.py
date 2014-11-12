@@ -1,49 +1,42 @@
 #!/usr/bin/env python
 # Julian Quick
+# plots first column of csv file as x axis, next 5 columns as y axis
+
 from pandas import *
 import matplotlib.pyplot as plt
-import os
+import matplotlib.dates as mdates
+import sys
 
-# name of plots folder
-# in the form /<name>/
-plotfold='plots'
+# This program needs a csv file to plot
+# which must be specified in the command line
+# Ex. ./canaryPlotter.py dat.dat
+if len(sys.argv)!=2:
+  print "please specify csv file to plot"
+  quit()
+
+# load csv as data frame
+df=pandas.io.parsers.read_csv(str(sys.argv[1]),parse_dates=True)#,keep_date_col=True)
 
 # How many columns should I plot?
 numcol=6
 
-for subdir, dirs, files in os.walk('35ca7'):
+# We only want the first 6 collumns
+df = df.ix[:,0:numcol]
 
-    # make directories for plots
-    for file in dirs:
-        if len(subdir.split('/'))==3:
-            try:os.mkdir(subdir+'/'+plotfold)
-            except OSError:pass
+# set up plot
+plt.figure() 
+# matplotlib.dates.AutoDateLocator()
+df.plot(df.Timestamp,alpha=0.3) # add transparency to see overlapping colors
+plt.plot()
+plt.legend(loc='best') # add legend in non-intrusive location
+plt.tight_layout(pad=1.08)
+plt.legend(loc=5,prop={'size':numcol}) # 
+plt.ylabel('Current')
+plt.xlabel('Date')
 
-    # plot each file
-    for file in files:
+plt.gcf().autofmt_xdate()
 
-        print 'plotting from ',subdir,str(file)
-        if str(file)[-4:]=='.csv' and len(subdir.split('/'))==3:
 
-            # load csv as data frame
-            df=pandas.io.parsers.read_csv(subdir+'/'+file)
 
-            # We only want the first 6 collumns
-            df = df.ix[:,0:numcol]
-
-            # set up plot
-            plt.figure() 
-            df.plot(df.Timestamp,alpha=0.3) # add transparency to see overlapping colors
-            plt.legend(loc='best') # add legend in non-intrusive location
-            plt.legend(loc=5,prop={'size':numcol}) # 
-            plt.ylabel('Current')
-            plt.xlabel('Reading #')
-            plt.gcf().autofmt_xdate()
-
-            # display plot
-            spsubs = str(subdir).split('/')
-            filnam=spsubs[0]
-            for piece in range(1,len(spsubs)-1):
-                filnam+='_'+spsubs[piece]
-            filnam+='_'+str(file)[:-4]
-            plt.savefig(subdir+'/'+plotfold+'/'+filnam)
+# display plot
+plt.show()

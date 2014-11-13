@@ -11,7 +11,7 @@ import sys
 # This program needs a csv file to plot
 # which must be specified in the command line
 # Ex. ./canaryPlotter.py dat.dat
-if len(sys.argv)!=2:
+if len(sys.argv)<2:
   print "please specify csv file to plot"
   quit()
 
@@ -26,6 +26,14 @@ numcol=6
 # We only want the first 6 collumns
 df = df.ix[:,0:numcol]
 
+if len(sys.argv)==3:
+   if sys.argv[2]=='-c':
+      df2 = df
+      df=pandas.DataFrame(df2.Timestamp)
+      df['Residence']=df2['P1rms (A)']*df2['P2rms (A)']
+      df['Specialty']=df2['P3rms (A)']*df2['P4rms (A)']
+
+
 # set up plot
 plt.figure() 
 # matplotlib.dates.AutoDateLocator()
@@ -39,7 +47,9 @@ plt.xlabel('Date')
 
 plt.gcf().autofmt_xdate()
 
-plt.gca().set_ylim([0,1200])
+if len(sys.argv)==2:
+   plt.gca().set_ylim([0,1200])
+else: plt.gca().set_ylim([0,5000])
 
 stamp = df.Timestamp[0]
 day = datetime.strftime(stamp,'%a')

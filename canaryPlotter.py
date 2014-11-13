@@ -16,7 +16,9 @@ if len(sys.argv)!=2:
   quit()
 
 # load csv as data frame
-df=pandas.io.parsers.read_csv(str(sys.argv[1]),parse_dates=True)#,keep_date_col=True)
+df=pandas.io.parsers.read_csv(str(sys.argv[1]))#,keep_date_col=True)
+for i in range(0,len(df.Timestamp)):
+   df.Timestamp[i] = datetime.strptime(df.Timestamp[i], '%a %b %d %H:%M:%S %Y')
 
 # How many columns should I plot?
 numcol=6
@@ -38,10 +40,11 @@ plt.xlabel('Date')
 plt.gcf().autofmt_xdate()
 
 plt.gca().set_ylim([0,1200])
-stamp = time.strptime(df.Timestamp[1],'%a %b %d %H:%M:%S %Y')
-day = time.strftime('%a',stamp)
-month =  time.strftime('%b',stamp)
-year =  time.strftime('%Y',stamp)
+
+stamp = df.Timestamp[0]
+day = datetime.strftime(stamp,'%a')
+month =  datetime.strftime(stamp,'%b')
+year =  datetime.strftime(stamp,'%Y')
 
 plt.title(day+' '+month+' '+year)
 

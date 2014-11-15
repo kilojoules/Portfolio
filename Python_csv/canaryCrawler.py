@@ -50,10 +50,11 @@ for subdir, dirs, files in os.walk(root):
             df.plot(df.Timestamp,alpha=0.3) # add transparency to see overlapping colors
             plt.tight_layout(pad=1.08)
             plt.legend(loc='best') # add legend in non-intrusive location
-            plt.legend(loc=5,prop={'size':numcol}) # 
+            plt.legend(loc=5,prop={'size':14}) # 
             plt.ylabel('Current')
             plt.xlabel('Time')
             plt.gcf().autofmt_xdate()
+            plt.gcf().set_size_inches(12.7,9.2)
             plt.gca().set_ylim([0,ylim])
 
             stamp = df.Timestamp[0]

@@ -20,20 +20,14 @@ if len(sys.argv)>1 and sys.argv[1]=='-c':
    ylim=5000
 else:ylim=1200
 
-root = '/Users/julian/Documents/CanaryData'
+root = '/Users/julian/Code/Portfolio/Python_csv'
 
 for subdir, dirs, files in os.walk(root):
-
-    # make directories for plots
-    for file in dirs:
-        if len(subdir.split(comsep))==3:
-            try:os.mkdir(root+subdir+comsep+plotfold)
-            except OSError:pass
 
     # plot each file
     for file in files:
 
-        if str(file)[-4:]=='.csv' and len(subdir.split(comsep))==3:
+        if str(file)[-4:]=='.csv': 
 
             print 'plotting '+str(file)+'...'
             # load csv as data frame
@@ -58,14 +52,31 @@ for subdir, dirs, files in os.walk(root):
             plt.legend(loc='best') # add legend in non-intrusive location
             plt.legend(loc=5,prop={'size':numcol}) # 
             plt.ylabel('Current')
-            plt.xlabel('Reading #')
+            plt.xlabel('Time')
             plt.gcf().autofmt_xdate()
             plt.gca().set_ylim([0,ylim])
 
+            stamp = df.Timestamp[0]
+            day = datetime.strftime(stamp,'%a')
+            month =  datetime.strftime(stamp,'%b')
+            year =  datetime.strftime(stamp,'%Y')
+
+            plt.title(day+' '+month+' '+year)
+
             # keep plot
+
+            # check for existing plots folder, 
+            # create one if it doesn't exist
+            if plotfold not in os.listdir(subdir):
+                print '** adding plots directory to ',subdir
+                os.mkdir(subdir+comsep+plotfold)
+
+            # save in plots directory
             spsubs = str(subdir).split(comsep)
             filnam=spsubs[0]
-            for piece in range(1,len(spsubs)-1):
+            for piece in range(len(spsubs)-4,len(spsubs)-1):
                 filnam+='_'+spsubs[piece]
             filnam+='_'+str(file)[:-4]
-            plt.savefig(root+subdir+comsep+plotfold+comsep+filnam)
+            saveto=subdir+comsep+plotfold+comsep+filnam
+            print '**** saving plot to ',saveto
+            plt.savefig(saveto)

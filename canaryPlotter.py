@@ -41,7 +41,8 @@ df.plot(df.Timestamp,alpha=0.3) # add transparency to see overlapping colors
 plt.plot()
 plt.legend(loc='best') # add legend in non-intrusive location
 plt.tight_layout(pad=1.08)
-plt.legend(loc=5,prop={'size':numcol}) # 
+plt.legend(loc=5,prop={'size':14}) # 
+plt.gcf().set_size_inches(12.7,9.2)
 plt.ylabel('Current')
 plt.xlabel('Date')
 
@@ -49,6 +50,7 @@ plt.gcf().autofmt_xdate()
 
 if len(sys.argv)==2:
    plt.gca().set_ylim([0,1200])
+
 else: plt.gca().set_ylim([0,5000])
 
 stamp = df.Timestamp[0]
@@ -58,5 +60,4 @@ year =  datetime.strftime(stamp,'%Y')
 
 plt.title(day+' '+month+' '+year)
 
-# display plot
-plt.show()
+plt.savefig('plot.png')

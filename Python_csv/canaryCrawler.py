@@ -4,14 +4,15 @@ from pandas import *
 import matplotlib.pyplot as plt
 import os
 import sys
+import platform
 
 # name of plots folder
 # in the form /<name>/
 plotfold='plots'
 
 # System specific info
-comsep="/"
-# comsep="\\"
+if platform.system()=='Darwin':comsep="/"
+else: comsep="\\"
 
 # How many columns should I plot?
 numcol=6

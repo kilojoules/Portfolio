@@ -1,42 +1,71 @@
 #!/usr/bin/env python
 # Julian Quick
-# plots first column of csv file as x axis, next 5 columns as y axis
-
 from pandas import *
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+import os
 import sys
 
-# This program needs a csv file to plot
-# which must be specified in the command line
-# Ex. ./canaryPlotter.py dat.dat
-if len(sys.argv)!=2:
-  print "please specify csv file to plot"
-  quit()
+# name of plots folder
+# in the form /<name>/
+plotfold='plots'
 
-# load csv as data frame
-df=pandas.io.parsers.read_csv(str(sys.argv[1]),parse_dates=True)#,keep_date_col=True)
+# System specific info
+comsep="/"
+# comsep="\\"
 
 # How many columns should I plot?
 numcol=6
 
-# We only want the first 6 collumns
-df = df.ix[:,0:numcol]
+if len(sys.argv)>1 and sys.argv[1]=='-c':
+   ylim=5000
+else:ylim=1200
 
-# set up plot
-plt.figure() 
-# matplotlib.dates.AutoDateLocator()
-df.plot(df.Timestamp,alpha=0.3) # add transparency to see overlapping colors
-plt.plot()
-plt.legend(loc='best') # add legend in non-intrusive location
-plt.tight_layout(pad=1.08)
-plt.legend(loc=5,prop={'size':numcol}) # 
-plt.ylabel('Current')
-plt.xlabel('Date')
+root = '/Users/julian/Documents/CanaryData'
 
-plt.gcf().autofmt_xdate()
+for subdir, dirs, files in os.walk(root):
 
+    # make directories for plots
+    for file in dirs:
+        if len(subdir.split(comsep))==3:
+            try:os.mkdir(root+subdir+comsep+plotfold)
+            except OSError:pass
 
+    # plot each file
+    for file in files:
 
-# display plot
-plt.show()
+        if str(file)[-4:]=='.csv' and len(subdir.split(comsep))==3:
+
+            print 'plotting '+str(file)+'...'
+            # load csv as data frame
+            df=pandas.io.parsers.read_csv(subdir+comsep+file)
+            for i in range(0,len(df.Timestamp)):
+                df.Timestamp[i] = datetime.strptime(df.Timestamp[i], '%a %b %d %H:%M:%S %Y')
+
+            # We only want the first 6 collumns
+            df = df.ix[:,0:numcol]
+
+            if len(sys.argv)==2:
+                if sys.argv[1]=='-c':
+                    df2 = df
+                    df=pandas.DataFrame(df2.Timestamp)
+                    df['Residence']=df2['P1rms (A)']*df2['P2rms (A)']
+                    df['Specialty']=df2['P3rms (A)']*df2['P4rms (A)']
+
+            # set up plot
+            plt.figure() 
+            df.plot(df.Timestamp,alpha=0.3) # add transparency to see overlapping colors
+            plt.tight_layout(pad=1.08)
+            plt.legend(loc='best') # add legend in non-intrusive location
+            plt.legend(loc=5,prop={'size':numcol}) # 
+            plt.ylabel('Current')
+            plt.xlabel('Reading #')
+            plt.gcf().autofmt_xdate()
+            plt.gca().set_ylim([0,ylim])
+
+            # keep plot
+            spsubs = str(subdir).split(comsep)
+            filnam=spsubs[0]
+            for piece in range(1,len(spsubs)-1):
+                filnam+='_'+spsubs[piece]
+            filnam+='_'+str(file)[:-4]
+            plt.savefig(root+subdir+comsep+plotfold+comsep+filnam)

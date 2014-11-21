@@ -48,7 +48,7 @@ for subdir, dirs, files in os.walk(root):
 
             # set up plot
             plt.figure() 
-            df.plot(df.Timestamp,alpha=0.3) # add transparency to see overlapping colors
+            df.plot(df.Timestamp,alpha=0.6,linewidth=2.3) # add transparency to see overlapping colors
             plt.tight_layout(pad=1.08)
             plt.legend(loc='best') # add legend in non-intrusive location
             plt.legend(loc=5,prop={'size':14}) # 
@@ -60,10 +60,11 @@ for subdir, dirs, files in os.walk(root):
 
             stamp = df.Timestamp[0]
             day = datetime.strftime(stamp,'%a')
+            DOM=datetime.strftime(stamp,'%d')
             month =  datetime.strftime(stamp,'%b')
             year =  datetime.strftime(stamp,'%Y')
 
-            plt.title(day+' '+month+' '+year)
+            plt.title(day+' '+month+' '+DOM+' '+year)
 
             # keep plot
 

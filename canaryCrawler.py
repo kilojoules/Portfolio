@@ -43,8 +43,8 @@ for subdir, dirs, files in os.walk(root):
                 if sys.argv[1]=='-c':
                     df2 = df
                     df=pandas.DataFrame(df2.Timestamp)
-                    df['Residence']=df2['P1rms (A)']*df2['P2rms (A)']
-                    df['Specialty']=df2['P3rms (A)']*df2['P4rms (A)']
+                    df['Residence']=df2['P1rms (A)']+df2['P2rms (A)']
+                    df['Specialty']=df2['P3rms (A)']+df2['P4rms (A)']
 
             # set up plot
             plt.figure() 

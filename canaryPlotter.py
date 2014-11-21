@@ -37,7 +37,7 @@ if len(sys.argv)==3:
 # set up plot
 plt.figure() 
 # matplotlib.dates.AutoDateLocator()
-df.plot(df.Timestamp,alpha=0.3) # add transparency to see overlapping colors
+df.plot(df.Timestamp,linewidth=2.3) # add transparency to see overlapping colors
 plt.plot()
 plt.legend(loc='best') # add legend in non-intrusive location
 plt.tight_layout(pad=1.08)
@@ -55,9 +55,10 @@ else: plt.gca().set_ylim([0,5000])
 
 stamp = df.Timestamp[0]
 day = datetime.strftime(stamp,'%a')
+DOM=datetime.strftime(stamp,'%d')
 month =  datetime.strftime(stamp,'%b')
 year =  datetime.strftime(stamp,'%Y')
 
-plt.title(day+' '+month+' '+year)
+plt.title(day+' '+month+' '+DOM+' '+year)
+plt.show()
 
-plt.savefig('plot.png')

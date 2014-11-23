@@ -77,10 +77,11 @@ for subdir, dirs, files in os.walk(root):
 
             # save in plots directory
             spsubs = str(subdir).split(comsep)
-            filnam=spsubs[0]
+            filnam=''
             for piece in range(len(spsubs)-4,len(spsubs)-1):
                 filnam+='_'+spsubs[piece]
             filnam+='_'+str(file)[:-4]
             saveto=subdir+comsep+plotfold+comsep+filnam
             print '**** saving plot to ',saveto
             plt.savefig(saveto)
+            plt.close()

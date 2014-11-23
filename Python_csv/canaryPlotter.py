@@ -48,10 +48,10 @@ plt.xlabel('Date')
 
 plt.gcf().autofmt_xdate()
 
-if len(sys.argv)==2:
-   plt.gca().set_ylim([0,1200])
+#if len(sys.argv)==2:
+#   plt.gca().set_ylim([0,1200])
 
-else: plt.gca().set_ylim([0,5000])
+#else: plt.gca().set_ylim([0,5000])
 
 stamp = df.Timestamp[0]
 day = datetime.strftime(stamp,'%a')

@@ -64,7 +64,7 @@ for subdir, dirs, files in os.walk(root):
             month =  datetime.strftime(stamp,'%b')
             year =  datetime.strftime(stamp,'%Y')
 
-            plt.title(day+' '+month+' '+DOM+' '+year)
+            plt.title(subdir+'   'day+' '+month+' '+DOM+' '+year)
 
             # keep plot
 

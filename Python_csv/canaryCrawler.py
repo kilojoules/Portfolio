@@ -16,6 +16,10 @@ else: comsep="\\"
 # How many columns should I plot?
 numcol=6
 
+if len(sys.argv)<2:
+   print 'usage: ./canaryCrawler.py [-c] rootdir'
+   quit()
+
 if len(sys.argv)>2 and sys.argv[1]=='-c':
    ylim=1500
    root = sys.argv[2]

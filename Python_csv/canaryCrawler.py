@@ -7,7 +7,6 @@ import sys
 import platform
 
 # name of plots folder
-# in the form /<name>/
 plotfold='plots'
 
 # System specific info
@@ -17,11 +16,13 @@ else: comsep="\\"
 # How many columns should I plot?
 numcol=6
 
-if len(sys.argv)>1 and sys.argv[1]=='-c':
+if len(sys.argv)>2 and sys.argv[1]=='-c':
    ylim=5000
-else:ylim=1200
-
-root = '/Users/julian/Code/Portfolio/Python_csv'
+   root = sys.argv[2]
+   plotfold='plots_Specialty'
+else:
+   ylim=1200
+   root = sys.argv[1]
 
 for subdir, dirs, files in os.walk(root):
 
@@ -39,7 +40,7 @@ for subdir, dirs, files in os.walk(root):
             # We only want the first 6 collumns
             df = df.ix[:,0:numcol]
 
-            if len(sys.argv)==2:
+            if len(sys.argv)>=2:
                 if sys.argv[1]=='-c':
                     df2 = df
                     df=pandas.DataFrame(df2.Timestamp)
@@ -64,7 +65,7 @@ for subdir, dirs, files in os.walk(root):
             month =  datetime.strftime(stamp,'%b')
             year =  datetime.strftime(stamp,'%Y')
 
-            plt.title(subdir+'   'day+' '+month+' '+DOM+' '+year)
+            plt.title(subdir+'   '+day+' '+month+' '+DOM+' '+year)
 
             # keep plot
 

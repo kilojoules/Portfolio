@@ -17,7 +17,7 @@ else: comsep="\\"
 numcol=6
 
 if len(sys.argv)>2 and sys.argv[1]=='-c':
-   ylim=5000
+   ylim=1500
    root = sys.argv[2]
    plotfold='plots_Specialty'
 else:

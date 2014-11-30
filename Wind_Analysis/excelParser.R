@@ -39,9 +39,8 @@ for (i in 2:length(Inverter.dat$TIME))
     {  
       if(Inverter.dat$DATA[i]>Inverter.dat$DATA[i-1])
       {
-        # Assume inverter effeciency is 0.927
-        efficiency=0.927
-        Inverter.dat$Watts[i] <- (1/efficiency)*as.numeric((Inverter.dat$DATA[i]-Inverter.dat$DATA[i-1])/as.numeric(Inverter.dat$TIME[i]-Inverter.dat$TIME[i-1]))*1000/24
+        # <useful description>
+        Inverter.dat$Watts[i] <- (as.numeric(Inverter.dat$DATA[i]-Inverter.dat$DATA[i-1])/as.numeric(Inverter.dat$TIME[i]-Inverter.dat$TIME[i-1]))*1000/24
       }
       else Inverter.dat$Watts[i] <- NA
     }
@@ -54,7 +53,7 @@ Inverter.dat$Watts <- as.numeric(Inverter.dat$Watts)
 
 # fit data from turbine company to a 7th degree polynomial
 powwa <- data.frame('speed'=seq(0.9,20.5,0.01))
-powwa$power <- wpc(powwa$speed)
+powwa$power <- wpcm(powwa$speed,1)
 
 # map from power to speed
 for (i in 1:length(Inverter.dat$Watts))
@@ -86,22 +85,37 @@ for (i in 1:12){
   avg.months$wind.ext[i]<-mean(m$extrapolated)
 }
 
-# Forecast power production
+
+# for each month
 avg.invmonths=data.frame('month'=c(1:12))
 for (i in 1:12)
 {
-  # make subset
+  
+  # make subset with only that month
   m <- subset(Inverter.dat,month==i)
   
-  # record average measured and extrapolated speeds
-  avg.invmonths$wind.measured[i]<-mean(m$wind)
+  # record average extrapolated speeds
   avg.invmonths$wind.ext[i] <- mean(m$extrapolated)
   
   # Find monthly extrapolated power
+  
+  # get appropriate x values
   x <- density(m$extrapolated)$x
+  
+  # use Rayleigh distribution based on 
+  # average extrapolated speed
   drey <- density(drayleigh(x,scale = mean(m$extrapolated)))
-  pow <- drey$y*(drey$x[4]-drey$x[3])*wpc2(x)
-  avg.invmonths$power.ext[i] <- sum(pow)
+  
+  #  find delta x distance for set of x values
+  #  found by density function
+  dx <- drey$x[4]-drey$x[3]
+   
+  # Forecast monthly average power [kW] using 
+  # energy generation density
+  avg.invmonths$power.Aeolos[i] <- sum(drey$y*(drey$x[4]-drey$x[3])*wpcm(x,2))
+  avg.invmonths$power.Endurance[i] <- sum(drey$y*(drey$x[4]-drey$x[3])*wpcm(x,3))
+  avg.invmonths$power.Northern[i] <- sum(drey$y*(drey$x[4]-drey$x[3])*wpcm(x,4))
 }
+
 
 

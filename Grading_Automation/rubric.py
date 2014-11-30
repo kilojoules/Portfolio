@@ -45,10 +45,7 @@ def reqinf(num,output):
   print >>output,''
   return score
 
-rubric=open('rubric.txt','w')
+rubric=open('Program_rubric.txt','w')
 score=0
-score+=handProb('5.1',rubric)
-score+=handProb('5.18',rubric)
-score+=reqinf('5.24',rubric)
-score=score/3
+score+=reqinf('Lab 6',rubric)
 print >>rubric,'Total Score is ',score

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import os
 import sys
 import platform
+import numpy.fft as np
 
 # name of plots folder
 plotfold='plots'
@@ -20,10 +21,9 @@ if len(sys.argv)<2:
    print 'usage: ./canaryCrawler.py [-c] rootdir'
    quit()
 
-if len(sys.argv)>2 and sys.argv[1]=='-c':
+if len(sys.argv)>2:
    ylim=1500
    root = sys.argv[2]
-   plotfold='plots_Specialty'
 else:
    ylim=1200
    root = sys.argv[1]
@@ -37,7 +37,8 @@ for subdir, dirs, files in os.walk(root):
 
             print 'plotting '+str(file)+'...'
             # load csv as data frame
-            df=pandas.io.parsers.read_csv(subdir+comsep+file)
+            tp=pandas.io.parsers.read_csv(subdir+comsep+file, iterator=True, chunksize=1000)
+            df = concat(tp, ignore_index=True)
             for i in range(0,len(df.Timestamp)):
                 df.Timestamp[i] = datetime.strptime(df.Timestamp[i], '%a %b %d %H:%M:%S %Y')
 
@@ -45,11 +46,18 @@ for subdir, dirs, files in os.walk(root):
             df = df.ix[:,0:numcol]
 
             if len(sys.argv)>=2:
-                if sys.argv[1]=='-c':
+                if sys.argv[1]=='-c' or sys.argv[1]=='-f':
+                    plotfold='plots_Specialty'
                     df2 = df
                     df=pandas.DataFrame(df2.Timestamp)
                     df['Residence']=df2['P1rms (A)']+df2['P2rms (A)']
                     df['Specialty']=df2['P3rms (A)']+df2['P4rms (A)']
+          	    if sys.argv[1]=='-f':
+                       df2['Residence']=np.fft(df['Residence'])
+		       df2['Specialty']=np.fft(df['Specialty'])
+                       df=df2
+                       print 'Fourier Transformation Complete'
+                       plotfold='plots_Specialty_fft'
 
             # set up plot
             plt.figure() 
@@ -77,7 +85,7 @@ for subdir, dirs, files in os.walk(root):
             # create one if it doesn't exist
             if plotfold not in os.listdir(subdir):
                 print '** adding plots directory to ',subdir
-                os.mkdir(subdir+comsep+plotfold)
+                o.mkdir(subdir+comsep+plotfold)
 
             # save in plots directory
             spsubs = str(subdir).split(comsep)
@@ -88,4 +96,4 @@ for subdir, dirs, files in os.walk(root):
             saveto=subdir+comsep+plotfold+comsep+filnam
             print '**** saving plot to ',saveto
             plt.savefig(saveto)
-            plt.close()
+plt.close()

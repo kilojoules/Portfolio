@@ -50,9 +50,9 @@ legend(11,.2, # places a legend at the appropriate place
 # Rayleigh distribution fit
 x <- density(NREL.dat$avg.speed)$x
 drey <- drayleigh(x,scale = mean(NREL.dat$avg.speed))
-plot(density(NREL.dat$avg.speed),lwd = 6)
+plot(density(NREL.dat$avg.speed),xlab='wind speed [m/s]',lwd = 6)
 lines(x,drey,col='red',lwd=3,lty=2)
-legend(17,0.1,c("Empitical","Rayleigh"),
+legend(13,0.1,c("Empitical","Rayleigh"),
        col=c("black","red"),
        lty=c(1,1), # gives the legend appropriate symbols (lines)
        

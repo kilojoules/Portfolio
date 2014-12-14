@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # Julian Quick
 from pandas import *
+import matplotlib as mpl
+mpl.use('pdf')  
 import matplotlib.pyplot as plt
 import os
 import sys
 import platform
-import numpy.fft as np
+import numpy as np
 
 # name of plots folder
 plotfold='plots'
@@ -24,6 +26,7 @@ if len(sys.argv)<2:
 if len(sys.argv)>2:
    ylim=1500
    root = sys.argv[2]
+   if sys.argv[1]=='-f':ylim=10000
 else:
    ylim=1200
    root = sys.argv[1]
@@ -34,7 +37,7 @@ for subdir, dirs, files in os.walk(root):
     for file in files:
 
         if str(file)[-4:]=='.csv': 
-
+       
             print 'plotting '+str(file)+'...'
             # load csv as data frame
             tp=pandas.io.parsers.read_csv(subdir+comsep+file, iterator=True, chunksize=1000)
@@ -46,18 +49,20 @@ for subdir, dirs, files in os.walk(root):
             df = df.ix[:,0:numcol]
 
             if len(sys.argv)>=2:
+                df2 = df
+                del df
+                df=pandas.DataFrame(df2.Timestamp)
                 if sys.argv[1]=='-c' or sys.argv[1]=='-f':
                     plotfold='plots_Specialty'
-                    df2 = df
-                    df=pandas.DataFrame(df2.Timestamp)
                     df['Residence']=df2['P1rms (A)']+df2['P2rms (A)']
                     df['Specialty']=df2['P3rms (A)']+df2['P4rms (A)']
           	    if sys.argv[1]=='-f':
-                       df2['Residence']=np.fft(df['Residence'])
-		       df2['Specialty']=np.fft(df['Specialty'])
-                       df=df2
-                       print 'Fourier Transformation Complete'
-                       plotfold='plots_Specialty_fft'
+                        df2=pandas.DataFrame(df.Timestamp)
+                        df2['Residence']=np.fft.fft(df['Residence'])
+		        df2['Specialty']=np.fft.fft(df['Specialty'])
+                        df=df2
+                        print 'Fourier Transformation Complete'
+                        plotfold='plots_Specialty_fft'
 
             # set up plot
             plt.figure() 
@@ -94,6 +99,7 @@ for subdir, dirs, files in os.walk(root):
                 filnam+='_'+spsubs[piece]
             filnam+='_'+str(file)[:-4]
             saveto=subdir+comsep+plotfold+comsep+filnam
+            saveto+='.pdf'
             print '**** saving plot to ',saveto
             plt.savefig(saveto)
 plt.close()

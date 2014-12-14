@@ -18,6 +18,7 @@ else: comsep="\\"
 
 # How many columns should I plot?
 numcol=6
+ymin=0
 
 if len(sys.argv)<2:
    print 'usage: ./canaryCrawler.py [-c] rootdir'
@@ -26,7 +27,9 @@ if len(sys.argv)<2:
 if len(sys.argv)>2:
    ylim=1500
    root = sys.argv[2]
-   if sys.argv[1]=='-f':ylim=10000
+   if sys.argv[1]=='-f':
+     ylim=10000
+     ymin=-10000
 else:
    ylim=1200
    root = sys.argv[1]
@@ -58,8 +61,8 @@ for subdir, dirs, files in os.walk(root):
                     df['Specialty']=df2['P3rms (A)']+df2['P4rms (A)']
           	    if sys.argv[1]=='-f':
                         df2=pandas.DataFrame(df.Timestamp)
-                        df2['Residence']=np.fft.fft(df['Residence'])
-		        df2['Specialty']=np.fft.fft(df['Specialty'])
+                        df2['Residence']=np.fft.fft(df['Residence']).real
+		        df2['Specialty']=np.fft.fft(df['Specialty']).real
                         df=df2
                         print 'Fourier Transformation Complete'
                         plotfold='plots_Specialty_fft'
@@ -74,7 +77,7 @@ for subdir, dirs, files in os.walk(root):
             plt.xlabel('Time')
             plt.gcf().autofmt_xdate()
             plt.gcf().set_size_inches(12.7,9.2)
-            plt.gca().set_ylim([0,ylim])
+            plt.gca().set_ylim([ymin,ylim])
 
             stamp = df.Timestamp[0]
             day = datetime.strftime(stamp,'%a')

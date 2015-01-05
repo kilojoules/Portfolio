@@ -1,6 +1,5 @@
 #Julian Quick
 #This function removes a variable from varDB and radio buttons using it's row number in varDB.txt (num)
-import makeSingleRadioButton
 from getInfo import getinfo
 def rem(num,self):
       from generateButtons import generateButtons

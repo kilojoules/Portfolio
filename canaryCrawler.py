@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # Julian Quick
 from pandas import *
+from datetime import datetime
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib as mpl
 mpl.use('pdf')  
 import matplotlib.pyplot as plt
@@ -9,14 +11,10 @@ import sys
 import platform
 import numpy as np
 
-# name of plots folder
+# Default name of plots folder
 plotfold='plots'
 
-# System specific info
-if platform.system()=='Darwin':comsep="/"
-else: comsep="\\"
-
-# How many columns should I plot?
+# Initial parameterization
 numcol=6
 ymin=0
 
@@ -25,9 +23,11 @@ if len(sys.argv)<2:
    quit()
 
 if len(sys.argv)>2:
-   ylim=1500
+   ylim=500
    root = sys.argv[2]
+   plotfold='plots_Specialty'
    if sys.argv[1]=='-f':
+     plotfold='plots_Specialty_fft'
      ylim=10000
      ymin=-10000
 else:
@@ -41,9 +41,13 @@ for subdir, dirs, files in os.walk(root):
 
         if str(file)[-4:]=='.csv': 
        
+            if plotfold not in os.listdir(subdir):
+	       print '** adding plots directory to ',subdir
+	       os.mkdir(os.path.join(subdir,plotfold))
+
             print 'plotting '+str(file)+'...'
             # load csv as data frame
-            tp=pandas.io.parsers.read_csv(subdir+comsep+file, iterator=True, chunksize=1000)
+            tp=pandas.io.parsers.read_csv(os.path.join(subdir,file), iterator=True, chunksize=1000)
             df = concat(tp, ignore_index=True)
             for i in range(0,len(df.Timestamp)):
                 df.Timestamp[i] = datetime.strptime(df.Timestamp[i], '%a %b %d %H:%M:%S %Y')
@@ -56,16 +60,29 @@ for subdir, dirs, files in os.walk(root):
                 del df
                 df=pandas.DataFrame(df2.Timestamp)
                 if sys.argv[1]=='-c' or sys.argv[1]=='-f':
-                    plotfold='plots_Specialty'
                     df['Residence']=df2['P1rms (A)']+df2['P2rms (A)']
                     df['Specialty']=df2['P3rms (A)']+df2['P4rms (A)']
           	    if sys.argv[1]=='-f':
                         df2=pandas.DataFrame(df.Timestamp)
-                        df2['Residence']=np.fft.fft(df['Residence']).real
-		        df2['Specialty']=np.fft.fft(df['Specialty']).real
+
+                        df2['Residence']=np.fft.fft(df['Residence'])
+		        df2['Specialty']=np.fft.fft(df['Specialty'])
                         df=df2
                         print 'Fourier Transformation Complete'
-                        plotfold='plots_Specialty_fft'
+
+                        threedee = plt.figure().gca(projection='3d')
+                        threedee.scatter(df.index, df['Residence'].real, df['Residence'].imag)
+ 			threedee.set_xlabel('index')
+ 			threedee.set_ylabel('real')
+ 			threedee.set_zlabel('complex')
+
+		        # save in plots directory
+   		        filnam=str(file)[:-4]
+		        saveto=os.path.join(subdir,plotfold,filnam+'.pdf')
+		        print '**** saving plot to ',saveto
+                        plt.show()
+		        plt.savefig(saveto,dpi=150)
+    			continue
 
             # set up plot
             plt.figure() 
@@ -93,16 +110,11 @@ for subdir, dirs, files in os.walk(root):
             # create one if it doesn't exist
             if plotfold not in os.listdir(subdir):
                 print '** adding plots directory to ',subdir
-                os.mkdir(subdir+comsep+plotfold)
+                os.mkdir(os.path.join(subdir,plotfold))
 
             # save in plots directory
-            spsubs = str(subdir).split(comsep)
-            filnam=''
-            for piece in range(len(spsubs)-4,len(spsubs)-1):
-                filnam+='_'+spsubs[piece]
-            filnam+='_'+str(file)[:-4]
-            saveto=subdir+comsep+plotfold+comsep+filnam
-            saveto+='.pdf'
+            filnam=str(file)[:-4]
+            saveto=os.path.join(subdir,plotfold,filnam+'.pdf')
             print '**** saving plot to ',saveto
             plt.savefig(saveto)
 plt.close()

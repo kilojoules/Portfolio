@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 # Julian Quick
+# Crawls through input root directory
+# and creates static plots of data
+# usage: ./canaryCrawler.py [-c or -f] root_dir/
+#   -c: plot combined residential and specialty signals
+#   -f: create 3d plots of fft results
 from pandas import *
 from datetime import datetime
 from mpl_toolkits.mplot3d import Axes3D

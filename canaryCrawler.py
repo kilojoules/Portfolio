@@ -51,7 +51,7 @@ for subdir, dirs, files in os.walk(root):
             # We only want the first 6 collumns
             df = df.ix[:,0:numcol]
 
-            if len(sys.argv)>=2:
+            if len(sys.argv)>2:
                 df2 = df
                 del df
                 df=pandas.DataFrame(df2.Timestamp)
@@ -93,7 +93,7 @@ for subdir, dirs, files in os.walk(root):
             # create one if it doesn't exist
             if plotfold not in os.listdir(subdir):
                 print '** adding plots directory to ',subdir
-                o.mkdir(subdir+comsep+plotfold)
+                os.mkdir(subdir+comsep+plotfold)
 
             # save in plots directory
             spsubs = str(subdir).split(comsep)

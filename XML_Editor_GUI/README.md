@@ -1,6 +1,7 @@
-This is a graphic user interface designed to edit an important XML file at the National Center for Atmospheric Research Research Aviation Faucility. 
+This is a graphic user interface (GUI) designed to edit an important XML file at the National Center for Atmospheric Research Research Aviation Faucility. 
 
-** File Index **
+ File Index 
+
 VDB.py
   program entry point. 
   This is called to initiate the GUI.

@@ -50,6 +50,10 @@ for subdir, dirs, files in os.walk(root):
 	       print '** adding plots directory to ',subdir
 	       os.mkdir(os.path.join(subdir,plotfold))
 
+            filnam=str(file)[:-4]+'.pdf'
+            saveto=os.path.join(subdir,plotfold,filnam)
+            if filnam in os.listdir(os.path.join(subdir,plotfold)):continue
+
             print 'plotting '+str(file)+'...'
             # load csv as data frame
             tp=pandas.io.parsers.read_csv(os.path.join(subdir,file), iterator=True, chunksize=1000)
@@ -111,15 +115,7 @@ for subdir, dirs, files in os.walk(root):
 
             # keep plot
 
-            # check for existing plots folder, 
-            # create one if it doesn't exist
-            if plotfold not in os.listdir(subdir):
-                print '** adding plots directory to ',subdir
-                os.mkdir(os.path.join(subdir,plotfold))
-
             # save in plots directory
-            filnam=str(file)[:-4]
-            saveto=os.path.join(subdir,plotfold,filnam+'.pdf')
             print '**** saving plot to ',saveto
             plt.savefig(saveto)
 plt.close()

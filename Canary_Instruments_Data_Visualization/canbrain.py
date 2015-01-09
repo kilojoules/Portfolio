@@ -46,7 +46,7 @@ for subdir, dirs, files in os.walk(root):
             df['Specialty']=df2['P3rms (A)']+df2['P4rms (A)']
 
             k+=1
-            if k == 5: 
+            if k == 2: 
                print "Using data from ",file," for comparrisson. This is not included in the training data."
                sample = ([df['Residence'].iloc[i:i+n].values for i in df.index[:-n+1]], (df['Specialty'] > 75)[n-1:])
                continue
@@ -57,5 +57,5 @@ for subdir, dirs, files in os.walk(root):
             labels.extend( (df['Specialty'] > 75)[n-1:])
 
 model = RandomForestClassifier()
-model.fit(sample[0], sample[1])
+model.fit(X,labels)
 print "Accuracy is ",accuracy_score(np.array(model.predict(sample[0])),np.array(sample[1]))

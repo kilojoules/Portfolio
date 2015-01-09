@@ -60,7 +60,7 @@ for subdir, dirs, files in os.walk(root):
 
             # record True/False results
             # >72.5 was chosen based on visual insepection
-            labels.extend( (df['Specialty'] > 73.5)[n-1:])
+            labels.extend( (df['Specialty'] > 74.5)[n-1:])
 
 # Make prediction, guage accuracy
 model.fit(X,labels)
@@ -72,11 +72,6 @@ def event_detection(day):
    res = day[1]
    pred = model.predict(res)
 
-   maxFalse = 2
-   LastFalse = 0
-   Fir = 0
-   Las = 0
-   print "has been changed"
    for i in range(1,len(res)-1):
       if pred[i] == True: print 'scanning ', pred[i], tim[i-n/2]
 

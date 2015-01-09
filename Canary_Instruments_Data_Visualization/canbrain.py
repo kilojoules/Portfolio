@@ -12,7 +12,9 @@ numcol=6
 X =[]
 labels = []
 k = 0
-n = 30
+
+# number of seconds for each time snippet
+n = 7
 
 if len(sys.argv)<2:
    print 'usage: rootdir'
@@ -46,9 +48,9 @@ for subdir, dirs, files in os.walk(root):
 
             # Use arbitraily selected file for accuracy sample
             k+=1
-            if k == 2: 
+            if k == 5: 
                print "Using data from ",file," for accuracy test. This is not included in the training data."
-               sample = ([df['Residence'].iloc[i:i+n].values for i in df.index[:-n+1]], (df['Specialty'] > 75)[n-1:])
+               sample = (df.Timestamp[n-1:].tolist(),[df['Residence'].iloc[i:i+n].values for i in df.index[:-n+1]], (df['Specialty'] > 73.5)[n-1:])
                continue
 
             print "training with ",file
@@ -57,10 +59,25 @@ for subdir, dirs, files in os.walk(root):
             X.extend([df['Residence'].iloc[i:i+n].values for i in df.index[:-n+1]])
 
             # record True/False results
-            # >75 was chosen based on visual insepection
-            labels.extend( (df['Specialty'] > 75)[n-1:])
+            # >72.5 was chosen based on visual insepection
+            labels.extend( (df['Specialty'] > 73.5)[n-1:])
 
 # Make prediction, guage accuracy
 model.fit(X,labels)
-print "Accuracy is ",accuracy_score(np.array(model.predict(sample[0])),np.array(sample[1]))
+print "Accuracy is ",accuracy_score(np.array(model.predict(sample[1])),np.array(sample[2]))
 
+def event_detection(day):
+   # day is of the form (df.time, df.residential)
+   tim = day[0]
+   res = day[1]
+   pred = model.predict(res)
+
+   maxFalse = 2
+   LastFalse = 0
+   Fir = 0
+   Las = 0
+   print "has been changed"
+   for i in range(1,len(res)-1):
+      if pred[i] == True: print 'scanning ', pred[i], tim[i-n/2]
+
+event_detection((sample[0],sample[1])) 

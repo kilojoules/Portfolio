@@ -1,0 +1,16 @@
+canaryCrawler
+	iterates through each csv file in an input directory
+	creates static graphs
+	usage: ./canaryCrawler [-c or -f] root_dir/
+        -c combines raw data to show residential and specialty signals
+	-f creates a 3d plot of the fft transformation of the residential data
+
+canaryPlotter
+	same options as canaryCrawler
+        displays a "live" plot, which can be rotated under the -f option
+
+canbrain.py
+        learning algorithm to detect usage events
+
+dat.dat
+        small example data set

@@ -54,11 +54,11 @@ for subdir, dirs, files in os.walk(root):
             print "training with ",file
 
             # record list of arrays of snippets in time
-            X.append([df['Residence'].iloc[i:i+n].values for i in df.index[:-n+1]])
+            X.extend([df['Residence'].iloc[i:i+n].values for i in df.index[:-n+1]])
 
             # record True/False results
             # >75 was chosen based on visual insepection
-            labels.append( (df['Specialty'] > 75)[n-1:])
+            labels.extend( (df['Specialty'] > 75)[n-1:])
 
 # Make prediction, guage accuracy
 model.fit(X,labels)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env ipython
 # Julian Quick
 from sklearn.metrics import accuracy_score
 from pandas import *
@@ -14,7 +14,7 @@ labels = []
 k = 0
 
 # number of seconds for each time snippet
-n = 7
+n = 200
 
 if len(sys.argv)<2:
    print 'usage: rootdir'
@@ -48,7 +48,7 @@ for subdir, dirs, files in os.walk(root):
 
             # Use arbitraily selected file for accuracy sample
             k+=1
-            if k == 5: 
+            if k == 8: 
                print "Using data from ",file," for accuracy test. This is not included in the training data."
                sample = (df.Timestamp[n-1:].tolist(),[df['Residence'].iloc[i:i+n].values for i in df.index[:-n+1]], (df['Specialty'] > 73.5)[n-1:])
                continue
@@ -72,7 +72,13 @@ def event_detection(day):
    res = day[1]
    pred = model.predict(res)
 
+   P = False
    for i in range(1,len(res)-1):
-      if pred[i] == True: print 'scanning ', pred[i], tim[i-n/2]
+      if pred[i] == True: #print 'scanning ', pred[i], tim[i-n/2]
+         P = True
+      if pred[i] == False:
+         if P== True: 
+	    print "event on ",tim[i-n/2]
+ 	    P = False
 
 event_detection((sample[0],sample[1])) 

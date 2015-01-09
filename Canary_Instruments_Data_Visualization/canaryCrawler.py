@@ -28,8 +28,8 @@ if len(sys.argv)<2:
    quit()
 
 if len(sys.argv)>2:
-   ymin = 70
-   ylim=75
+   ymin = 0
+   ylim=750
    root = sys.argv[2]
    plotfold='plots_Specialty'
    if sys.argv[1]=='-f':

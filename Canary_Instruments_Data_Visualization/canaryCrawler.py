@@ -54,7 +54,7 @@ for subdir, dirs, files in os.walk(root):
 
             filnam=str(file)[:-4]+'.pdf'
             saveto=os.path.join(subdir,plotfold,filnam)
-            if filnam in os.listdir(os.path.join(subdir,plotfold)) and '-0' not in sys.argv:continue
+            if filnam in os.listdir(os.path.join(subdir,plotfold)) and '-o' not in sys.argv:continue
 
             print 'plotting '+str(file)+'...'
             # load csv as data frame

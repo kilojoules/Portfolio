@@ -2,9 +2,10 @@
 # Julian Quick
 # Crawls through input root directory
 # and creates static plots of data
-# usage: ./canaryCrawler.py [-c or -f] root_dir/
+# usage: ./canaryCrawler.py [-c or -f] root_dir/ [-o]
 #   -c: plot combined residential and specialty signals
 #   -f: create 3d plots of fft results
+#   -o: Overwrite existing plots
 from pandas import *
 from datetime import datetime
 from mpl_toolkits.mplot3d import Axes3D
@@ -24,7 +25,7 @@ numcol=6
 ymin=0
 
 if len(sys.argv)<2:
-   print 'usage: ./canaryCrawler.py [-c] rootdir'
+   print 'usage: ./canaryCrawler.py [-c or -f] rootdir [-o]'
    quit()
 
 if len(sys.argv)>2:
@@ -53,7 +54,7 @@ for subdir, dirs, files in os.walk(root):
 
             filnam=str(file)[:-4]+'.pdf'
             saveto=os.path.join(subdir,plotfold,filnam)
-            if filnam in os.listdir(os.path.join(subdir,plotfold)):continue
+            if filnam in os.listdir(os.path.join(subdir,plotfold)) and '-0' not in sys.argv:continue
 
             print 'plotting '+str(file)+'...'
             # load csv as data frame

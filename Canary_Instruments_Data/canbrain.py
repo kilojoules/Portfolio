@@ -1,4 +1,4 @@
-#!/usr/bin/env ipython
+#!/usr/bin/env python
 # Julian Quick
 from sklearn.metrics import accuracy_score
 from pandas import *
@@ -34,7 +34,9 @@ for subdir, dirs, files in os.walk(root):
        
             # Parse timestamp
             tp=pandas.io.parsers.read_csv(os.path.join(subdir,file), iterator=True, chunksize=1000)
+            print file
             df = concat(tp, ignore_index=True)
+            print df.Timestamp
             for i in range(0,len(df.Timestamp)):
                 df.Timestamp[i] = datetime.strptime(df.Timestamp[i], '%a %b %d %H:%M:%S %Y')
 	 

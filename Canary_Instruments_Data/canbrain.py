@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Julian Quick
-from sklearn.metrics import accuracy_score
+#from sklearn.metrics import accuracy_score
 from pandas import *
 from datetime import datetime
 import numpy as np
@@ -14,7 +14,11 @@ labels = []
 k = 0
 
 # number of seconds for each time snippet
-n = 200
+n_DWH = 200
+n = 20
+
+maxHeight_DWH = 74.5
+maxHeight = 100
 
 if len(sys.argv)<2:
    print 'usage: rootdir'
@@ -33,13 +37,10 @@ for subdir, dirs, files in os.walk(root):
         if str(file)[-4:]=='.csv': 
        
             # Parse timestamp
-            tp=pandas.io.parsers.read_csv(os.path.join(subdir,file), iterator=True, chunksize=1000)
+            tp=pandas.io.parsers.read_csv(os.path.join(subdir,file), iterator=True, chunksize=100)
             print file
             df = concat(tp, ignore_index=True)
-            print df.Timestamp
-            for i in range(0,len(df.Timestamp)):
-                df.Timestamp[i] = datetime.strptime(df.Timestamp[i], '%a %b %d %H:%M:%S %Y')
-	 
+            df.Timestamp = df.Timestamp.apply(lambda d: datetime.strptime(d, "%a %b %d %H:%M:%S %Y"))
             # Replace df with simplified Residential/Specialty dataframe
 	    df2 = df
             del df
@@ -50,9 +51,9 @@ for subdir, dirs, files in os.walk(root):
 
             # Use arbitraily selected file for accuracy sample
             k+=1
-            if k == 8: 
+            if k == 5: 
                print "Using data from ",file," for accuracy test. This is not included in the training data."
-               sample = (df.Timestamp[n-1:].tolist(),[df['Residence'].iloc[i:i+n].values for i in df.index[:-n+1]], (df['Specialty'] > 73.5)[n-1:])
+               sample = (df.Timestamp[n-1:].tolist(),[df['Residence'].iloc[i:i+n].values for i in df.index[:-n+1]], (df['Specialty'] > maxHeight)[n-1:])
                continue
 
             print "training with ",file
@@ -62,11 +63,12 @@ for subdir, dirs, files in os.walk(root):
 
             # record True/False results
             # >72.5 was chosen based on visual insepection
-            labels.extend( (df['Specialty'] > 74.5)[n-1:])
+            labels.extend( (df['Specialty'] > maxHeight)[n-1:])
 
 # Make prediction, guage accuracy
+'fitting model...'
 model.fit(X,labels)
-print "Accuracy is ",accuracy_score(np.array(model.predict(sample[1])),np.array(sample[2]))
+#print "Accuracy is ",accuracy_score(np.array(model.predict(sample[1])),np.array(sample[2]))
 
 def event_detection(day):
    # day is of the form (df.time, df.residential)
@@ -82,5 +84,6 @@ def event_detection(day):
          if P== True: 
 	    print "event on ",tim[i-n/2]
  	    P = False
-
+print 'EVENTS'
+print '==========='
 event_detection((sample[0],sample[1])) 

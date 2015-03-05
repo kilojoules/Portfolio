@@ -54,16 +54,19 @@ for subdir, dirs, files in os.walk(root):
 
             filnam=str(file)[:-4]+'.pdf'
             saveto=os.path.join(subdir,plotfold,filnam)
+
+            # overwrite protection
             if filnam in os.listdir(os.path.join(subdir,plotfold)) and '-o' not in sys.argv:continue
 
             print 'plotting '+str(file)+'...'
+
             # load csv as data frame
             tp=pandas.io.parsers.read_csv(os.path.join(subdir,file), iterator=True, chunksize=1000)
             df = concat(tp, ignore_index=True)
             for i in range(0,len(df.Timestamp)):
                 df.Timestamp[i] = datetime.strptime(df.Timestamp[i], '%a %b %d %H:%M:%S %Y')
 
-            # We only want the first 6 collumns
+            # We only want the first 6 cols...
             df = df.ix[:,0:numcol]
 
             if len(sys.argv)>2:

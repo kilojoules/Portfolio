@@ -94,7 +94,7 @@ for subdir, dirs, files in os.walk(root):
                df.ix[:,i] = df.ix[:,i].map(lambda x: calcurv(x,i))
 
             # save calibrated csv
-            df.to_csv(os.path.join(subdir,plotfold,'calibrated_'+str(file)+'.csv'),sep=',')
+            df.to_csv(os.path.join(subdir,plotfold,'calibrated_'+str(file)),sep=',')
 
             if len(sys.argv)>2:
                 df2 = df

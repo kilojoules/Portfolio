@@ -16,6 +16,26 @@ import os
 import sys
 import platform
 import numpy as np
+import math
+
+def calcurv(x, col):
+
+   if type(x) is pandas.tslib.Timestamp:return x
+   if col == 1:
+      a,b,c,d,e = (29, 0.0402, 0.0944, 1.2259, 3.1254)
+   elif col == 2:
+      a,b,c,d,e = (29, 0.0400, 0.1098, 1.3221, 3.4830)
+   elif col == 3:
+      a,b,c,d,e = (33, 0.0237, 0.0218, 0.7964, 2.0601)
+   elif col == 4:  
+      a,b,c,d,e = (33, 0.0236, 0.0187, 0.8086, 2.1167)
+   elif col == 5:
+      a,b,c,d,e = (33, 0.0237, 0.0226, 0.7884, 2.0423)
+
+   if x <=a: y = b*x - c
+   else: y = d*math.log(x) - e
+   if y <0: y = 0
+   return y
 
 # Default name of plots folder
 plotfold='plots'
@@ -30,7 +50,7 @@ if len(sys.argv)<2:
 
 if len(sys.argv)>2:
    ymin = 0
-   ylim=750
+   ylim=10
    root = sys.argv[2]
    plotfold='plots_Specialty'
    if sys.argv[1]=='-f':
@@ -56,7 +76,7 @@ for subdir, dirs, files in os.walk(root):
             saveto=os.path.join(subdir,plotfold,filnam)
 
             # overwrite protection
-            if filnam in os.listdir(os.path.join(subdir,plotfold)) and '-o' not in sys.argv:continue
+#            if filnam in os.listdir(os.path.join(subdir,plotfold)) and '-o' not in sys.argv:continue
 
             print 'plotting '+str(file)+'...'
 
@@ -68,6 +88,13 @@ for subdir, dirs, files in os.walk(root):
 
             # We only want the first 6 cols...
             df = df.ix[:,0:numcol]
+
+            # calibration curve corrections
+            for i in range(1,6):
+               df.ix[:,i] = df.ix[:,i].map(lambda x: calcurv(x,i))
+
+            # save calibrated csv
+            df.to_csv(os.path.join(subdir,plotfold,'calibrated_'+str(file)+'.csv'),sep=',')
 
             if len(sys.argv)>2:
                 df2 = df

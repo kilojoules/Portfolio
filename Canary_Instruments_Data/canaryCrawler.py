@@ -50,7 +50,7 @@ if len(sys.argv)<2:
 
 if len(sys.argv)>2:
    ymin = 0
-   ylim=10
+   ylim=300
    root = sys.argv[2]
    plotfold='plots_Specialty'
    if sys.argv[1]=='-f':
@@ -87,7 +87,7 @@ for subdir, dirs, files in os.walk(root):
                 df.Timestamp[i] = datetime.strptime(df.Timestamp[i], '%a %b %d %H:%M:%S %Y')
 
             # We only want the first 6 cols...
-            df = df.ix[:,0:numcol]
+            df = df.ix[:,0:numcol+1]
 
             # calibration curve corrections
             for i in range(1,6):
@@ -101,10 +101,10 @@ for subdir, dirs, files in os.walk(root):
                 del df
                 df=pandas.DataFrame(df2.Timestamp)
                 if sys.argv[1]=='-c' or sys.argv[1]=='-f':
-                    df['Residence']=df2['P1rms (A)']+df2['P2rms (A)']
-                    df['Specialty 1']=df2['P3rms (A)']
-                    df['Specialty 2']=df2['P4rms (A)']
-                    df['Specialty 3']=df2['P5rms (A)']
+                    df['Residence']=(df2['P1rms (A)']+df2['P2rms (A)'])*df2['Vrms (V)']
+                    df['Specialty 1']=df2['P3rms (A)']*df2['Vrms (V)']
+                    df['Specialty 2']=df2['P4rms (A)']*df2['Vrms (V)']
+                    df['Specialty 3']=df2['P5rms (A)']*df2['Vrms (V)']
           	    if sys.argv[1]=='-f':
                         df2=pandas.DataFrame(df.Timestamp)
 
@@ -133,7 +133,7 @@ for subdir, dirs, files in os.walk(root):
             plt.tight_layout(pad=1.08)
             plt.legend(loc='best') # add legend in non-intrusive location
             plt.legend(loc=5,prop={'size':14}) # 
-            plt.ylabel('Current')
+            plt.ylabel('Power')
             plt.xlabel('Time')
             #plt.gcf().autofmt_xdate(rotation=90)
             plt.xticks(pandas.date_range(df.Timestamp[0],df.Timestamp[len(df.Timestamp)-1],freq='H'))

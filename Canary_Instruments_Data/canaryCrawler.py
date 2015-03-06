@@ -102,7 +102,9 @@ for subdir, dirs, files in os.walk(root):
                 df=pandas.DataFrame(df2.Timestamp)
                 if sys.argv[1]=='-c' or sys.argv[1]=='-f':
                     df['Residence']=df2['P1rms (A)']+df2['P2rms (A)']
-                    df['Specialty']=df2['P3rms (A)']+df2['P4rms (A)']
+                    df['Specialty 1']=df2['P3rms (A)']
+                    df['Specialty 2']=df2['P4rms (A)']
+                    df['Specialty 3']=df2['P5rms (A)']
           	    if sys.argv[1]=='-f':
                         df2=pandas.DataFrame(df.Timestamp)
 

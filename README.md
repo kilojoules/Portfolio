@@ -11,3 +11,6 @@ XMLParserAPI
 
 XML_Editor_GUI
   PYQT graphic user interface I wrote for the National Center for Atmospheric Research in Boulder, CO
+
+pipeFlow.py
+  finite difference calculator for heat loss in a pipe

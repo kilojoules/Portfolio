@@ -1,10 +1,10 @@
 import scipy
-R_w = 0.6 # W/mk
+R_w = 0.024# W/mk
 R_f = 0.042 # W/mk
 r = 0.2 # m
 T_0 = 61 # C
 T_a = 20 # C
-dx = 0.1 # m
+dx = 0.0001 # m
 L = 25 # m
 
 def heat_balance(T_1,T_2):

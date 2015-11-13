@@ -1,8 +1,9 @@
 import scipy
-R_w = 0.024# W/mk
+# R_w = 0.028# W/mk air
+R_w = 0.654# W/mk
 R_f = 0.042 # W/mk
 r = 0.2 # m
-T_0 = 61 # C
+T_0 = 50 # C
 T_a = 20 # C
 dx = 0.0001 # m
 L = 25 # m
